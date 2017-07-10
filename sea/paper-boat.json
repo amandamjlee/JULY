@@ -1,0 +1,173 @@
+{
+    "object": {
+        "type": "Scene",
+        "uuid": "764391BB-97F0-464F-9D03-46179FC04983",
+        "children": [{
+            "name": "Null",
+            "uuid": "8C60597C-A5D8-30C5-803B-493A7F445A92",
+            "matrix": [-1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1],
+            "visible": true,
+            "type": "Object"
+        },{
+            "name": "Null1",
+            "uuid": "DD1393ED-898F-3443-A490-6B6CA8C01B53",
+            "matrix": [-1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1],
+            "visible": true,
+            "type": "Object"
+        },{
+            "name": "papierschiffchen2",
+            "uuid": "77CBD76F-3385-373E-B266-78E4A1EAFC66",
+            "matrix": [-1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1],
+            "visible": true,
+            "type": "Object"
+        },{
+            "name": "papierschiffchen2.001",
+            "uuid": "42D1750A-35FF-3A0F-A148-1A7AE1B265E0",
+            "matrix": [-1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1],
+            "visible": true,
+            "type": "Object",
+            "children": [{
+                "name": "schiffchen_Plane_001",
+                "uuid": "FF59F2A7-0384-31C7-AAA4-8D3CC5825512",
+                "matrix": [1,0,0,0,0,1,0,0,0,0,1,0,-0.1364,0,-0.0928,1],
+                "visible": true,
+                "type": "Mesh",
+                "material": "32755159-D879-37CD-92D4-D1B4F0CE3F0F",
+                "castShadow": true,
+                "receiveShadow": true,
+                "geometry": "A6821D72-E0EB-3109-BAED-26DFDAB8B507"
+            },{
+                "name": "schiffchen_Plane_001.001",
+                "uuid": "F5DC53A1-7E19-3192-BFFE-C43DA30D64AD",
+                "matrix": [1,0,0,0,0,1,0,0,0,0,1,0,-0.1364,0,-0.0928,1],
+                "visible": true,
+                "type": "Mesh",
+                "material": "32755159-D879-37CD-92D4-D1B4F0CE3F0F",
+                "castShadow": true,
+                "receiveShadow": true,
+                "geometry": "9D855AE3-9BD1-303F-94E4-0A85C854FED2"
+            }]
+        }],
+        "matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
+    },
+    "geometries": [{
+        "materials": [{
+            "specularCoef": 50,
+            "opacity": 1,
+            "blending": "NormalBlending",
+            "DbgColor": 15658734,
+            "colorSpecular": [0.1,0.1,0.1],
+            "shading": "phong",
+            "wireframe": false,
+            "depthTest": true,
+            "DbgIndex": 0,
+            "doubleSided": true,
+            "colorAmbient": [0.690196,0.690196,0.690196],
+            "transparent": false,
+            "colorDiffuse": [0.690196,0.690196,0.690196],
+            "DbgName": "Material_001",
+            "depthWrite": true,
+            "colorEmissive": [0,0,0],
+            "visible": true
+        }],
+        "data": {
+            "skinIndices": [],
+            "vertices": [-0.86154,-0.846272,0.151473,0,1e-06,1.56569,0,-1.41421,2.9799,0,-1.41421,-2.67695,0,0,-1.26274,-0.301873,1e-06,0.151472,0,-1.39952,0.151473],
+            "animations": [],
+            "name": "schiffchen_Plane_001Geometry",
+            "influencesPerVertex": 2,
+            "bones": [],
+            "normals": [0.882809,-0.469649,0,0.727897,-0.613666,-0.305826,0.880245,-0.33549,-0.33549,0.880245,-0.33549,0.33549,0.727897,-0.613666,0.305826,-0.061861,-0.998077,0,-0.977508,-0.210822,0],
+            "morphTargets": [],
+            "uvs": [],
+            "faces": [34,0,1,2,0,0,1,2,34,0,3,4,0,0,3,4,34,5,0,4,0,5,0,4,34,1,0,5,0,1,0,5,34,4,6,5,0,4,6,5,34,1,5,6,0,1,5,6],
+            "skinWeights": [],
+            "metadata": {
+                "bones": 0,
+                "vertices": 7,
+                "generator": "io_three",
+                "materials": 1,
+                "morphTargets": 0,
+                "version": 3,
+                "faces": 6,
+                "normals": 7,
+                "uvs": 0
+            }
+        },
+        "uuid": "A6821D72-E0EB-3109-BAED-26DFDAB8B507",
+        "type": "Geometry"
+    },{
+        "materials": [{
+            "specularCoef": 50,
+            "opacity": 1,
+            "blending": "NormalBlending",
+            "DbgColor": 15658734,
+            "colorSpecular": [0.1,0.1,0.1],
+            "shading": "phong",
+            "wireframe": false,
+            "depthTest": true,
+            "DbgIndex": 0,
+            "doubleSided": true,
+            "colorAmbient": [0.690196,0.690196,0.690196],
+            "transparent": false,
+            "colorDiffuse": [0.690196,0.690196,0.690196],
+            "DbgName": "Material_001",
+            "depthWrite": true,
+            "colorEmissive": [0,0,0],
+            "visible": true
+        }],
+        "data": {
+            "skinIndices": [],
+            "vertices": [0.86154,-0.846272,0.151473,0,1e-06,1.56569,0,-1.41421,2.9799,0,-1.41421,-2.67695,0,0,-1.26274,0.301873,1e-06,0.151472,0,-1.39952,0.151473],
+            "animations": [],
+            "name": "schiffchen_Plane_001.001Geometry",
+            "influencesPerVertex": 2,
+            "bones": [],
+            "normals": [0.882809,0.469649,0,0.727897,0.613666,0.305826,0.880245,0.33549,0.33549,0.880245,0.33549,-0.33549,0.727897,0.613666,-0.305826,-0.061861,0.998077,0,-0.977508,0.210822,0],
+            "morphTargets": [],
+            "uvs": [],
+            "faces": [34,0,1,2,0,0,1,2,34,0,3,4,0,0,3,4,34,5,0,4,0,5,0,4,34,1,0,5,0,1,0,5,34,4,6,5,0,4,6,5,34,1,5,6,0,1,5,6],
+            "skinWeights": [],
+            "metadata": {
+                "bones": 0,
+                "vertices": 7,
+                "generator": "io_three",
+                "materials": 1,
+                "morphTargets": 0,
+                "version": 3,
+                "faces": 6,
+                "normals": 7,
+                "uvs": 0
+            }
+        },
+        "uuid": "9D855AE3-9BD1-303F-94E4-0A85C854FED2",
+        "type": "Geometry"
+    }],
+    "images": [],
+    "materials": [{
+        "shininess": 50,
+        "side": 2,
+        "emissive": 0,
+        "blending": "NormalBlending",
+        "ambient": 11579568,
+        "depthTest": true,
+        "color": 11579568,
+        "name": "Material_001",
+        "uuid": "32755159-D879-37CD-92D4-D1B4F0CE3F0F",
+        "depthWrite": true,
+        "type": "MeshPhongMaterial",
+        "vertexColors": false,
+        "specular": 1644825
+    }],
+    "animations": [{
+        "tracks": [],
+        "name": "default",
+        "fps": 29
+    }],
+    "metadata": {
+        "version": 4.4,
+        "type": "Object",
+        "generator": "io_three"
+    },
+    "textures": []
+}
