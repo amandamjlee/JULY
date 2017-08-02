@@ -1,3 +1,6 @@
+let fireflies = [];
+let dotSystem;
+
 var Colors = {
   red:0xf25346,
   white:0xd8d0d1,
@@ -8,6 +11,10 @@ var Colors = {
 };
 
 window.addEventListener('load', init, false);
+var clock = new THREE.Clock();
+var firstControls;
+var time;
+var i, materials = [], geometry, parameters;
 
 function init() {
   // set up the scene, the camera and the renderer
@@ -21,8 +28,10 @@ function init() {
   createSea();
 
   createMoon();
+  createFirefly();
+  createStars();
   // createSky();
-
+  drawDotSystem();
   // start a loop that will update the objects' positions
   // and render the scene on each frame
   loop();
@@ -37,46 +46,36 @@ function createScene() {
   HEIGHT = window.innerHeight;
   WIDTH = window.innerWidth;
 
-  // Create the scene
   scene = new THREE.Scene();
 
-  // Add a fog effect to the scene; same color as the
-  // background color used in the style sheet
-
+  // Add a fog effect to the scene; same color as the background color used in the style sheet
   scene.fog = new THREE.Fog(0x370059, 100, 850);
 
   // Create the camera
   aspectRatio = WIDTH / HEIGHT;
-  fieldOfView = 60;
-  nearPlane = 1;
+  fieldOfView = 70;
+  nearPlane = 0.1;
   farPlane = 10000;
   camera = new THREE.PerspectiveCamera(fieldOfView,	aspectRatio, nearPlane, farPlane);
+  // camera.lookAt(scene.position);
 
-  // Set the position of the camera
   camera.position.x = 0;
   camera.position.z = 200;
   camera.position.y = 100;
+  // camera.rotation.y = Math.PI *2 ;
 
   // Create the renderer
   renderer = new THREE.WebGLRenderer({
-    // Allow transparency to show the gradient background
-    // we defined in the CSS
     alpha: true,
-
-    // Activate the anti-aliasing; this is less performant,
-    // but, as our project is low-poly based, it should be fine :)
     antialias: true
   });
 
-  // Define the size of the renderer; in this case,
   // it will fill the entire screen
   renderer.setSize(WIDTH, HEIGHT);
-
-  // Enable shadow rendering
   renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.setPixelRatio(window.devicePixelRatio);
 
-  // Add the DOM element of the renderer to the
-  // container we created in the HTML
   container = document.getElementById('world');
   container.appendChild(renderer.domElement);
 
@@ -85,8 +84,11 @@ function createScene() {
   window.addEventListener('resize', handleWindowResize, false);
 
   var controls = new THREE.VRControls(this.camera);
+  firstControls = new THREE.FirstPersonControls( camera );
     controls.standing = true;
     this.camera.position.y = 100;
+    firstControls.movementSpeed = 500;
+    firstControls.lookSpeed = 0.1;
     // this.camera.position.y = controls.userHeight;
 
     var mouseControls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
@@ -95,7 +97,6 @@ function createScene() {
     mouseControls.enableDamping = true;
     mouseControls.dampingFactor = 0.25;
     mouseControls.enableZoom = false;
-
 }
 
 
@@ -111,13 +112,8 @@ function handleWindowResize() {
 var hemisphereLight, shadowLight;
 
 function createLights() {
-  // A hemisphere light is a gradient colored light;
-  // the first parameter is the sky color, the second parameter is the ground color,
-  // the third parameter is the intensity of the light
   hemisphereLight = new THREE.HemisphereLight(0xaaaaaa,0x000000, .9)
 
-  // A directional light shines from a specific direction.
-  // It acts like the sun, that means that all the rays produced are parallel.
   shadowLight = new THREE.DirectionalLight(0xffffff, .9);
 
   // Set the direction of the light
@@ -140,12 +136,10 @@ function createLights() {
   shadowLight.shadow.mapSize.height = 2048;
 
   // to activate the lights, just add them to the scene
-  scene.add(hemisphereLight);
+  // scene.add(hemisphereLight);
   scene.add(shadowLight);
 }
 
-
-// Instantiate the sea and add it to the scene:
 
 var sea;
 
@@ -153,33 +147,12 @@ function createSea(){
   sea = new Sea();
 
   // push it a little bit at the bottom of the scene
-  sea.mesh.position.y = -330;
+  sea.mesh.position.y = 50;
 
   // add the mesh of the sea to the scene
   scene.add(sea.mesh);
 }
 
-
-//////*******MOON
-// function createMoon(){
-//   var geom = new THREE.SphereGeometry(5,32,32);
-// 	var mat = new THREE.MeshPhongMaterial({
-// 		color:0xfff954,
-// 		transparent:true,
-// 		opacity:.6,
-// 		shading:THREE.FlatShading,
-// 	});
-//
-// 	var moon = new THREE.Mesh(geom, mat);
-//   moon.position.x = 0;
-//   moon.position.y = 145;
-//   moon.position.z = 100;
-// 	// Allow the sea to receive shadows
-//   var pointLight = new THREE.PointLight( 0xffffff, 2, 400 );
-// 	moon.add( pointLight );
-// 	moon.receiveShadow = false;
-//   scene.add(moon);
-// }
 
 function createMoon(){
   var geom = new THREE.SphereGeometry(70,32,32);
@@ -202,8 +175,8 @@ function createMoon(){
   // // dirLight.position.set( 0, -1, 0 ).normalize();
   // scene.add( dirLight );
   // dirLight.color.setHSL( 0.1, 0.7, 0.5 );
-
-  // addLight( 0.55, 0.9, 0.5, 5000, 0, -1000 );
+  //
+  addLight( 0.55, 0.9, 0.5, 5000, 0, -1000 );
   addLight( 0.08, 0.8, 0.5, 0, 400, -600 );
   // addLight( 0.995, 0.5, 0.9, 5000, 5000, -1000 );
 }
@@ -213,29 +186,206 @@ function addLight( h, s, l, x, y, z ) {
   moon.color.setHSL( h, s, l );
   moon.position.set( x, y, z );
   scene.add( moon );
-
 }
-//////*******MOON ENDS
+
+function createStars(){
+
+  geometry = new THREE.Geometry();
+
+  parameters = [
+    [ [1, 1, 0.5], 1 ],
+    [ [0.95, 1, 0.5], 1 ],
+    [ [0.90, 1, 0.5], 1 ],
+    [ [0.85, 1, 0.5], 1 ],
+    [ [0.80, 1, 0.5], 1 ]
+  ];
+
+  for ( i = 0; i < 1000; i ++ ) {
+
+    var vertex = new THREE.Vector3();
+    vertex.x = Math.random() * 2000-1000;
+    vertex.y = Math.random() * 2000-1000;
+    vertex.z = Math.random() * 2000-1000;
+
+    geometry.vertices.push( vertex );
+
+  }
+
+  for ( i = 0; i < parameters.length; i ++ ) {
+
+    color = 0xffffff;
+    size  = parameters[i][1];
+
+    materials[i] = new THREE.PointsMaterial( { color: 0xffffff, size: 2, sizeAttenuation: false } );
+
+    particles = new THREE.Points( geometry, materials[i] );
+
+    // particles.rotation.x = Math.random() * 6;
+    particles.rotation.y = Math.random() * 6;
+    particles.position.y = Math.random() * 6 + 600;//?????
+    particles.rotation.z = Math.random() * 6;
+
+    scene.add( particles );
+
+  }
+}
+
+
+function createFirefly(){
+    const randSpread = pos => THREE.Math.randFloatSpread(pos);
+    const rand = (min, max) => THREE.Math.randFloat(min, max);
+
+    for (let i = 0; i < 40; i += 1) {
+      const firefly = new Fly({
+        light: true,
+        bodyColor: 0x5363B2,
+        wingColor: 0xA9B8FC,
+        lightColor: 0x00FFA5,
+      });
+      firefly.group.position.set(randSpread(1000), rand(1000), randSpread(1000));
+
+      const scale = rand(0.2, 0.4);
+      firefly.group.scale.set(scale, scale, scale);
+
+      scene.add(firefly.group);
+      fireflies.push(firefly);
+    }
+}
+
+function drawDotSystem() {
+  dotSystem = new THREE.Group();
+  scene.add(dotSystem);
+
+  const system1 = new DotSystem({
+    intensity: 300,
+    color: 0xE1FEA4,
+    xSpread: 800,
+    ySpread: 800,
+    zSpread: 800,
+  });
+  dotSystem.add(system1.group);
+
+  const system2 = new DotSystem({
+    intensity: 100,
+    color: 0xFF007B,
+    xSpread: 300,
+    ySpread: 500,
+    zSpread: 400,
+    size: 8,
+  });
+  system2.group.position.set(-100, -80, 0);
+  dotSystem.add(system2.group);
+}
 
 
 function loop(){
-  // Rotate the propeller, the sea and the sky
-  // airplane.propeller.rotation.x += 0.3;
-  // sea.mesh.rotation.z += .001;
-  // sky.mesh.rotation.z += .01;
+  requestAnimationFrame(loop);
+  const timer = 0.00001 * Date.now();
+  var delta = clock.getDelta();
+  time = clock.getElapsedTime() * 10;
+  firstControls.update( delta );
 
-  // render the scene
+  fireflies.forEach((firefly, index) => {
+    const xPos = ( 1000 * Math.cos(timer + index)) + 150;
+    const yPos = 20 * Math.sin(timer * index) + 150;
+    const zPos = -100 * Math.sin(timer + index);
+    firefly.group.position.set(xPos, yPos, zPos);
+  });
+
+  dotSystem.rotation.x += 0.0003;
+  dotSystem.rotation.y -= 0.0001;
+
+  sea.moveWaves();
+
   renderer.render(scene, camera);
 
-  // call the loop function again
-  requestAnimationFrame(loop);
-  sea.moveWaves();
 }
 
+class Fly {
+  constructor({ light, lightColor }) {
+    this.group = new THREE.Group();
+
+    if (light) {
+      this.lightColor = lightColor;
+      this.drawLight();
+    }
+  }
+
+  drawLight() {
+    const geometry = new THREE.SphereGeometry(5, 32, 32);
+    geometry.castShadow = false;
+    const flyLight = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({
+      color: this.lightColor,
+      // shading: THREE.FlatShading,
+    }));
+    // flyLight.rotation.y = 45 * (Math.PI / 180);
+
+    const light = new THREE.AmbientLight(this.lightColor, 0.01, 0.5);
+    light.add(flyLight);
+    // light.position.set(0, -12, 0);
+    light.castShadow = false;
+    this.group.add(light);
+  }
+}
+
+class DotSystem {
+  constructor({
+    intensity = 5000,
+    color = 0xffffff,
+    xSpread = 1000,
+    ySpread = 1000,
+    zSpread = 1000,
+    size = 6,
+  }) {
+    this.group = new THREE.Group();
+
+    this.intensity = intensity;
+    this.color = color;
+    this.xSpread = xSpread;
+    this.ySpread = ySpread;
+    this.zSpread = zSpread;
+    this.size = size;
+
+    this.draw();
+  }
+  draw() {
+    const geometry = new THREE.Geometry();
+    const colors = [];
+
+    const loader = new THREE.TextureLoader();
+    loader.crossOrigin = false;
+    loader.load('https://res.cloudinary.com/dta92sz5c/image/upload/v1494500813/dot_g4pvyu.svg', (texture) => {
+      for (let i = 0; i < this.intensity; i += 1) {
+        const star = new THREE.Vector3();
+        star.x = THREE.Math.randFloatSpread(this.xSpread);
+        star.y = THREE.Math.randFloatSpread(this.ySpread);
+        star.z = THREE.Math.randFloatSpread(this.zSpread);
+
+        geometry.vertices.push(star);
+
+        colors[i] = new THREE.Color(this.color);
+      }
+      geometry.colors = colors;
+
+      const material = new THREE.PointsMaterial({
+        size: this.size,
+        map: texture,
+        vertexColors: THREE.VertexColors,
+        alphaTest: 0.5,
+        transparent: true,
+      });
+
+      const particles = new THREE.Points(geometry, material);
+      this.group.add(particles);
+    });
+  }
+}
 
 Sea = function(){ //=function Sea(){}
-  var geom = new THREE.BoxGeometry(1000,600,800,20,10,10);
-  // geom.position.y = -100;
+  var geom = new THREE.PlaneGeometry(1000,1000,20,20,10,10);
+  // var geom = new THREE.BoxGeometry(1000,600,800,20,10,10);
+
+  // geom.position.y = 300;
   geom.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI/2));
 
   // important: by merging vertices we ensure the continuity of the waves
@@ -294,6 +444,15 @@ Sea.prototype.moveWaves = function (){
     // update the position of the vertex
     v.x = vprops.x + Math.cos(vprops.ang)*vprops.amp;
     v.y = vprops.y + Math.sin(vprops.ang)*vprops.amp;
+
+    // for ( var i = 0; i < l; i ++ ) {
+    //
+    //   v.x = vprops.x + 100* Math.sin(i / 5 + ( time + i ) / 7)*vprops.amp;
+    //
+    // }
+
+
+  // geometry.vertices[ i ].y =  100* Math.sin( i / 5 + ( time + i ) / 7 );
 
     // increment the angle for the next frame
     vprops.ang += vprops.speed;
